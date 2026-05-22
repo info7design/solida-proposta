@@ -48,3 +48,15 @@ logo.png
 Este projeto está versionado no GitHub em:
 
 https://github.com/info7design/solida-proposta
+
+## GitHub Pages
+
+Deploy automático configurado via GitHub Actions no arquivo:
+
+.github/workflows/deploy-pages.yml
+
+URL esperada do site publicado:
+
+https://info7design.github.io/solida-proposta/
+
+Se a página ainda não abrir imediatamente, aguarde de 1 a 3 minutos para o primeiro deploy finalizar.
