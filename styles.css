@@ -1,0 +1,1129 @@
+/* ==========================================================================
+   SÓLIDA ZELADORIA - DESIGN SYSTEM & STYLESHEET
+   ========================================================================== */
+
+/* 1. VARIÁVEIS E TEMA DE CORES */
+:root {
+    /* Paleta Premium Sólida */
+    --gold-primary: #d4af37;
+    --gold-hover: #c59b27;
+    --gold-light: #f4ecce;
+    
+    /* Cores do Tema Escuro (Default para o Editor) */
+    --bg-main: #121212;
+    --bg-surface: #1e1e1e;
+    --bg-surface-hover: #292929;
+    --border-color: #333333;
+    --text-primary: #f5f5f7;
+    --text-secondary: #a1a1a6;
+    --text-muted: #6e6e73;
+    --input-bg: #2a2a2a;
+    --input-border: #444444;
+    --input-focus: #d4af37;
+    
+    /* Cores Auxiliares */
+    --success: #2e7d32;
+    --success-light: rgba(46, 125, 50, 0.1);
+    --danger: #d32f2f;
+    --danger-light: rgba(211, 47, 47, 0.1);
+    --info: #0288d1;
+    
+    /* Tipografia */
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    
+    /* Efeitos */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tema Claro para o Editor (Alternável) */
+body.light-theme {
+    --bg-main: #f4f5f7;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #f0f1f4;
+    --border-color: #e0e0e0;
+    --text-primary: #1d1d1f;
+    --text-secondary: #515154;
+    --text-muted: #86868b;
+    --input-bg: #f5f5f7;
+    --input-border: #cccccc;
+    --input-focus: #d4af37;
+}
+
+/* Reset Geral */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Layout Principal */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* 2. PAINEL DO EDITOR (ESQUERDA) */
+.editor-panel {
+    width: 480px;
+    min-width: 400px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    z-index: 10;
+    box-shadow: var(--shadow-lg);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Logo Styling (Shared) */
+.logo-container, .doc-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.logo-title {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--text-primary);
+}
+
+.logo-subtitle {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold-primary);
+}
+
+/* Document specific logo text override (printed pages are always white background) */
+.doc-logo .logo-title {
+    color: #111111 !important;
+}
+
+.doc-logo .logo-subtitle {
+    color: #d4af37 !important;
+}
+
+.editor-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(212, 175, 55, 0.05) 100%);
+}
+
+.editor-scroll {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.editor-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Componentes de Formulário no Editor */
+.editor-section {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+body.light-theme .editor-section {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.4;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group.row-flex {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.form-input, .form-select, .form-textarea {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    transition: var(--transition);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+}
+
+.form-textarea {
+    resize: vertical;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+/* Botões */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--gold-primary);
+    color: #121212;
+}
+.btn-primary:hover {
+    background-color: var(--gold-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+.btn-danger {
+    background-color: var(--danger-light);
+    color: #ff5252;
+    border: 1px solid rgba(211, 47, 47, 0.3);
+}
+.btn-danger:hover {
+    background-color: var(--danger);
+    color: #ffffff;
+}
+
+.btn-success {
+    background-color: var(--success);
+    color: #ffffff;
+}
+.btn-success:hover {
+    background-color: #246427;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+.btn-icon:hover {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
+}
+
+/* Gerenciador de Propostas Salvas */
+.saved-proposals-container {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.saved-list-wrapper {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.saved-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* Checkbox dos Serviços (Switch Cards) */
+.services-checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.switch-card {
+    cursor: pointer;
+    display: block;
+}
+
+.switch-card input[type="checkbox"] {
+    display: none;
+}
+
+.switch-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: var(--bg-surface-hover);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.switch-card:hover .switch-box {
+    border-color: var(--text-muted);
+}
+
+.switch-card input[type="checkbox"]:checked + .switch-box {
+    border-color: var(--gold-primary);
+    background-color: rgba(212, 175, 55, 0.05);
+    color: var(--gold-primary);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.icon-srv {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.label-srv {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Abas de Configuração de Postos */
+.tabs-header {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 14px;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    color: var(--gold-primary);
+    border-bottom-color: var(--gold-primary);
+}
+
+.tabs-content {
+    min-height: 200px;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Accordion de Sub-seções de Custos */
+.cost-section-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.cost-section-header {
+    width: 100%;
+    background-color: var(--bg-surface-hover);
+    border: none;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cost-section-header:hover {
+    background-color: var(--border-color);
+}
+
+.cost-section-body {
+    padding: 14px;
+    display: none;
+    border-top: 1px solid var(--border-color);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.cost-section-card.open .cost-section-body {
+    display: block;
+}
+
+.cost-section-card.open .cost-section-header i {
+    transform: rotate(180deg);
+}
+
+.cost-section-header i {
+    transition: var(--transition);
+}
+
+/* Tabelas e Controles Dinâmicos no Editor */
+.editor-table-list {
+    margin-bottom: 10px;
+}
+
+.editor-table-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light-theme .editor-table-row {
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.row-label {
+    flex-grow: 1;
+    font-size: 12px;
+    text-overflow: elipsis;
+    overflow: hidden;
+}
+
+.row-value-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 130px;
+    min-width: 130px;
+}
+
+.row-input {
+    width: 100%;
+    padding: 4px 6px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 12px;
+    text-align: right;
+}
+
+.row-actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn-row-del {
+    color: var(--danger);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+.btn-row-del:hover {
+    opacity: 1;
+}
+
+.table-add-action {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+}
+
+/* Formulário de adicionar campo */
+.add-field-form {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    margin-top: 8px;
+    display: none;
+}
+
+.add-field-form.open {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
+
+/* Accordion de Textos Gerais */
+.accordion-item {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.accordion-header {
+    width: 100%;
+    background-color: var(--bg-surface-hover);
+    border: none;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.accordion-header:hover {
+    background-color: var(--border-color);
+}
+
+.accordion-content {
+    padding: 12px;
+    display: none;
+    border-top: 1px solid var(--border-color);
+}
+
+.accordion-item.open .accordion-content {
+    display: block;
+}
+
+.accordion-item.open .accordion-header i {
+    transform: rotate(180deg);
+}
+
+.accordion-header i {
+    transition: var(--transition);
+}
+
+.form-label-inline {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+
+/* ==========================================================================
+   3. PAINEL DE VISUALIZAÇÃO / PREVIEW (DIREITA)
+   ========================================================================== */
+.preview-panel {
+    flex-grow: 1;
+    background-color: #333333;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+body.light-theme .preview-panel {
+    background-color: #e4e5e7;
+}
+
+.preview-actions {
+    position: sticky;
+    top: 0;
+    background-color: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+    box-shadow: var(--shadow-sm);
+}
+
+body.light-theme .preview-actions {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.preview-status {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.light-theme .preview-status {
+    color: #515154;
+}
+
+/* DOCUMENTO VIRTUAL (Estilo de folha A4) */
+.document-pages {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    flex-grow: 1;
+}
+
+.page {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 20mm 20mm 20mm;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+body.light-theme .page {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Elementos do Documento Impresso */
+.doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.doc-logo svg {
+    display: block;
+}
+
+.doc-meta-header {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 700;
+    color: #444444;
+    letter-spacing: 0.5px;
+}
+
+.header-divider {
+    border: none;
+    height: 1px;
+    background-color: #d4af37;
+    margin-bottom: 20px;
+}
+
+.doc-title-box {
+    margin: 20px 0 30px 0;
+    text-align: center;
+}
+
+.doc-title-box h1 {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 800;
+    color: #1a1a1a;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+}
+
+.doc-client-info {
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    border-left: 3px solid #d4af37;
+    padding: 12px 16px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.doc-client-info p {
+    margin-bottom: 4px;
+}
+
+.doc-client-info p:last-child {
+    margin-bottom: 0;
+}
+
+.doc-section {
+    margin-bottom: 25px;
+}
+
+.doc-section-title {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.doc-paragraph {
+    font-size: 11px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    text-align: justify;
+}
+
+.doc-list {
+    margin-left: 20px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.doc-list li {
+    margin-bottom: 6px;
+}
+
+/* Tabelas da Proposta Impressa */
+.doc-table-wrapper {
+    margin-bottom: 20px;
+}
+
+.doc-table-title {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+
+.doc-table th, .doc-table td {
+    padding: 6px 10px;
+    border: 1px solid #d3d3d3;
+    text-align: left;
+}
+
+.doc-table th {
+    background-color: #FFFF00; /* Destaque amarelo do original */
+    color: #000000;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9px;
+}
+
+/* Variação de Cabeçalho da Proposta (Amarelo Sólida) */
+.doc-table th.col-desc { width: 50%; }
+.doc-table th.col-calc { width: 25%; }
+.doc-table th.col-val { width: 25%; text-align: right; }
+.doc-table td.col-val { text-align: right; font-weight: 600; }
+
+.doc-table tr.total-row {
+    font-weight: 700;
+    background-color: #f5f5f5;
+}
+
+.doc-table tr.grand-total-row {
+    font-weight: 700;
+    background-color: #eaeaea;
+    font-size: 11px;
+}
+
+.doc-table tr.grand-total-row td {
+    border-top: 2px solid #d4af37;
+    border-bottom: 2px solid #d4af37;
+}
+
+/* Resumo Consolidado (Tabela Especial) */
+.consolidated-table {
+    margin-top: 15px;
+}
+
+/* Bloco de Assinatura */
+.doc-signature {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.signature-line {
+    width: 250px;
+    height: 1px;
+    background-color: #888888;
+    margin: 30px 0 8px 0;
+}
+
+.sig-name {
+    font-weight: 700;
+}
+.sig-phone, .sig-email {
+    color: #555555;
+}
+
+/* Rodapé das Páginas Virtuais */
+.page-footer {
+    position: absolute;
+    bottom: 20mm;
+    left: 20mm;
+    right: 20mm;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 6px;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 8px;
+    color: #666666;
+}
+
+/* Análise Comparativa Visual */
+.comparative-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.comp-card {
+    border: 1px solid #d3d3d3;
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    background-color: #fcfcfc;
+}
+
+.comp-card h4 {
+    font-family: var(--font-heading);
+    font-size: 9px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+.comp-card-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+}
+
+.comp-card-desc {
+    font-size: 9px;
+    color: #666666;
+    line-height: 1.4;
+}
+
+.comp-benefit-box {
+    background-color: #fffde7;
+    border: 1px solid #fff59d;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 10px;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.comp-benefit-box strong {
+    color: #f57f17;
+}
+
+/* Explicação das formulas (Visível apenas no editor, mas boa prática no CSS) */
+.formula-tooltip {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Estilo para input de quantidade nas tabelas do Preview */
+.doc-input-qty {
+    width: 60px;
+    padding: 3px 6px;
+    border: 1px solid #cccccc;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    background-color: #fafafa;
+    color: #111111;
+    font-family: var(--font-body);
+    transition: var(--transition);
+}
+
+.doc-input-qty:focus {
+    outline: none;
+    border-color: var(--gold-primary);
+    background-color: #ffffff;
+    box-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+}
+
+.doc-input-qty::-webkit-outer-spin-button,
+.doc-input-qty::-webkit-inner-spin-button {
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   4. ANIMAÇÕES
+   ========================================================================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); max-height: 0; overflow: hidden; }
+    to { opacity: 1; transform: translateY(0); max-height: 300px; }
+}
+
+
+/* ==========================================================================
+   5. RESPONSIVIDADE E ADAPTAÇÃO PARA TELA
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .app-container {
+        flex-direction: column;
+        overflow: auto;
+    }
+    
+    .editor-panel {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        max-height: 600px;
+    }
+    
+    .preview-panel {
+        height: auto;
+        min-height: 600px;
+        overflow-y: visible;
+        padding-bottom: 40px;
+    }
+    
+    .document-pages {
+        padding: 20px;
+    }
+}
+
+
+/* ==========================================================================
+   6. ESTILOS DE IMPRESSÃO (CRÍTICO)
+   ========================================================================== */
+@media print {
+    /* Esconde elementos do editor e de controle */
+    body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .app-container {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+    
+    .editor-panel, .preview-actions, #theme-toggle {
+        display: none !important;
+    }
+    
+    .preview-panel {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        background-color: #ffffff !important;
+        padding: 0 !important;
+    }
+    
+    .document-pages {
+        display: block;
+        padding: 0 !important;
+        gap: 0 !important;
+    }
+    
+    .page {
+        width: 210mm;
+        height: 297mm;
+        margin: 0 !important;
+        padding: 20mm !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: none !important;
+    }
+    
+    /* Quebras de página específicas */
+    #doc-page-1 {
+        page-break-after: always;
+    }
+    #doc-page-2 {
+        page-break-after: always;
+    }
+    #doc-page-3 {
+        page-break-after: avoid;
+    }
+
+    /* Impede o navegador de remover cores de fundo no print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .doc-table th {
+        background-color: #FFFF00 !important;
+        color: #000000 !important;
+    }
+    
+    .doc-client-info {
+        background-color: #f9f9f9 !important;
+        border-left: 3px solid #d4af37 !important;
+    }
+    
+    .comp-card {
+        background-color: #fcfcfc !important;
+    }
+    
+    .comp-benefit-box {
+        background-color: #fffde7 !important;
+        border: 1px solid #fff59d !important;
+    }
+
+    /* Remove estilos de input durante a impressão */
+    .doc-input-qty {
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        width: auto !important;
+        box-shadow: none !important;
+        text-align: center !important;
+        appearance: textfield !important;
+        -moz-appearance: textfield !important;
+        font-size: 10px !important;
+        color: #1a1a1a !important;
+    }
+}
+

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sólida Zeladoria - Gerador de Propostas Comerciais</title>
+    <!-- Google Fonts: Inter e Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- PAINEL DE CONTROLE (ESQUERDA) -->
+        <aside class="editor-panel">
+            <header class="editor-header">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Sólida Zeladoria Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-title">SÓLIDA</span>
+                        <span class="logo-subtitle">ZELADORIA</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="btn-icon" title="Alternar Tema Escuro/Claro do Editor">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="editor-scroll">
+                <!-- Seção 1: Salvar/Carregar Propostas -->
+                <section class="editor-section">
+                    <h3 class="section-title"><i class="fas fa-folder-open"></i> Gerenciamento de Propostas</h3>
+                    <div class="form-group row-flex">
+                        <input type="text" id="proposal-name-input" placeholder="Nome do modelo (Ex: Condomínio Alvorada)" class="form-input flex-grow">
+                        <button id="save-proposal-btn" class="btn btn-primary" title="Salvar Proposta Localmente">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                    <div class="saved-proposals-container">
+                        <label class="form-label">Propostas Salvas:</label>
+                        <div class="saved-list-wrapper">
+                            <select id="saved-proposals-select" class="form-select">
+                                <option value="">-- Selecione uma proposta salva --</option>
+                            </select>
+                            <div class="saved-actions">
+                                <button id="load-proposal-btn" class="btn btn-secondary" title="Carregar proposta selecionada">
+                                    <i class="fas fa-folder-open"></i>
+                                </button>
+                                <button id="delete-proposal-btn" class="btn btn-danger" title="Excluir proposta selecionada">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção 2: Dados Gerais do Cliente -->
+                <section class="editor-section">
+                    <h3 class="section-title"><i class="fas fa-file-contract"></i> Informações do Contrato</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="client-name" class="form-label">Nome do Cliente</label>
+                            <input type="text" id="client-name" value="CARMELA EMPREENDIMENTOS" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="proposal-number" class="form-label">Número da Proposta</label>
+                            <input type="text" id="proposal-number" value="001/2026" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="proposal-date" class="form-label">Data da Proposta</label>
+                            <input type="date" id="proposal-date" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="proposal-ref" class="form-label">Referência / Objeto</label>
+                            <input type="text" id="proposal-ref" value="Prestação de Serviços de Portaria e Auxiliar de Limpeza" class="form-input">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção 3: Seleção de Serviços (Postos) -->
+                <section class="editor-section">
+                    <h3 class="section-title"><i class="fas fa-concierge-bell"></i> Serviços Contratados (Postos)</h3>
+                    <p class="section-desc">Selecione os serviços que farão parte desta proposta. Cada serviço marcado gerará um detalhamento de custos e um resumo próprio.</p>
+                    <div class="services-checkbox-grid">
+                        <label class="switch-card">
+                            <input type="checkbox" id="srv-portaria" checked>
+                            <span class="switch-box">
+                                <i class="fas fa-key icon-srv"></i>
+                                <span class="label-srv">Portaria</span>
+                            </span>
+                        </label>
+                        <label class="switch-card">
+                            <input type="checkbox" id="srv-vigia">
+                            <span class="switch-box">
+                                <i class="fas fa-shield-alt icon-srv"></i>
+                                <span class="label-srv">Vigia</span>
+                            </span>
+                        </label>
+                        <label class="switch-card">
+                            <input type="checkbox" id="srv-servicos-gerais" checked>
+                            <span class="switch-box">
+                                <i class="fas fa-broom icon-srv"></i>
+                                <span class="label-srv">Serviços Gerais</span>
+                            </span>
+                        </label>
+                        <label class="switch-card">
+                            <input type="checkbox" id="srv-jardinagem">
+                            <span class="switch-box">
+                                <i class="fas fa-seedling icon-srv"></i>
+                                <span class="label-srv">Jardinagem</span>
+                            </span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Seção 4: Configuração dos Detalhes dos Postos (Dinâmico) -->
+                <section class="editor-section" id="posts-config-section">
+                    <h3 class="section-title"><i class="fas fa-calculator"></i> Configuração de Custos por Posto</h3>
+                    
+                    <!-- Abas dos Postos Selecionados -->
+                    <div class="tabs-header" id="posts-tabs-header">
+                        <!-- Gerado via JS -->
+                    </div>
+
+                    <!-- Conteúdo das Abas -->
+                    <div class="tabs-content" id="posts-tabs-content">
+                        <!-- Gerado via JS -->
+                    </div>
+                </section>
+
+                <!-- Seção 5: Textos da Proposta -->
+                <section class="editor-section">
+                    <h3 class="section-title"><i class="fas fa-align-left"></i> Textos e Considerações</h3>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>1. Apresentação da Empresa</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <textarea id="text-apresentacao" class="form-textarea" rows="4">Nossa proposta visa garantir a conservação, segurança e manutenção de seu patrimônio através de profissionais qualificados. Diferenciamo-nos pela total transparência na composição de custos e pelo rigoroso cumprimento das obrigações trabalhistas, garantindo segurança jurídica ao contratante.</textarea>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>5. Análise Comparativa (Valor Agregado)</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="form-group check-row">
+                                <input type="checkbox" id="show-analise-comparativa" checked>
+                                <label for="show-analise-comparativa" class="form-label-inline">Exibir Seção de Análise Comparativa</label>
+                            </div>
+                            <textarea id="text-analise-comparativa" class="form-textarea" rows="4">Entendemos que a função de auxiliar de limpeza com algumas, não todas, das atividades de zeladoria onde exige polivalência. Abaixo, demonstramos a diferença entre um posto padrão e um posto com Acúmulo de Função (20%), que garante maior agilidade na resolução de problemas técnicos:</textarea>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>6. Considerações Finais</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <textarea id="text-consideracoes-gerais" class="form-textarea" rows="5">Informamos também que sugerimos analisar, caso haja no condomínio a necessidade de manuseio de lixo ativo nas limpezas, ou a limpeza onde a utilização de banheiros coletivos seja superior a 25 utilizações diárias, onde requer uma de ação intensificada de auxiliar de serviços gerais (ASG), o que confere a necessidade de considerar a aplicação de fator de Insalubridade, preservando o trabalhador, e assegurando tanto a contratada, quanto a contratante de possíveis passivos trabalhistas.</textarea>
+                            <div class="form-grid" style="margin-top: 10px;">
+                                <div class="form-group">
+                                    <label class="form-label">Nome do Assinante</label>
+                                    <input type="text" id="signer-name" value="Jefferson dos Santos" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" id="signer-phone" value="(12) 68156-5700" class="form-input">
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label class="form-label">E-mail Comercial</label>
+                                    <input type="email" id="signer-email" value="comercial@solidazeladoria.com.br" class="form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <footer class="editor-footer">
+                <p>Proprietário do Sistema: <strong>Sólida Zeladoria</strong></p>
+            </footer>
+        </aside>
+
+        <!-- PAINEL DE VISUALIZAÇÃO / PREVIEW (DIREITA) -->
+        <main class="preview-panel">
+            <div class="preview-actions">
+                <span class="preview-status"><i class="fas fa-sync fa-spin"></i> Visualização em tempo real</span>
+                <button id="print-proposal-btn" class="btn btn-success">
+                    <i class="fas fa-print"></i> Gerar PDF / Imprimir
+                </button>
+            </div>
+
+            <!-- DOCUMENTO VIRTUAL (Formatado para parecer folha de papel) -->
+            <div class="document-pages" id="proposal-document">
+                
+                <!-- PÁGINA 1 -->
+                <div class="page" id="doc-page-1">
+                    <!-- Cabeçalho -->
+                    <div class="doc-header">
+                        <div class="doc-logo">
+                            <img src="logo.png" alt="Sólida Zeladoria Logo" class="logo-img">
+                            <div class="logo-text">
+                                <span class="logo-title">SÓLIDA</span>
+                                <span class="logo-subtitle">ZELADORIA</span>
+                            </div>
+                        </div>
+                        <div class="doc-meta-header">
+                            PROPOSTA COMERCIAL: <span class="bind-proposal-number">001/2026</span>
+                        </div>
+                    </div>
+                    <hr class="header-divider">
+
+                    <!-- Título da Proposta -->
+                    <div class="doc-title-box">
+                        <h1 id="doc-main-title">PROPOSTA COMERCIAL SERVIÇOS DE ZELADORIA PROFISSIONAL</h1>
+                    </div>
+
+                    <!-- Informações do Cliente -->
+                    <div class="doc-client-info">
+                        <p><strong>Cliente:</strong> <span class="bind-client-name">CARMELA EMPREENDIMENTOS</span></p>
+                        <p><strong>Data:</strong> <span class="bind-proposal-date">22 de Maio de 2026</span></p>
+                        <p><strong>Referência:</strong> <span class="bind-proposal-ref">Prestação de Serviços de Portaria e Auxiliar de Limpeza</span></p>
+                    </div>
+
+                    <!-- 1. APRESENTAÇÃO -->
+                    <div class="doc-section">
+                        <h2 class="doc-section-title">1. APRESENTAÇÃO</h2>
+                        <p id="bind-text-apresentacao" class="doc-paragraph">
+                            Nossa proposta visa garantir a conservação, segurança e manutenção de seu patrimônio através de profissionais qualificados. Diferenciamo-nos pela total transparência na composição de custos e pelo rigoroso cumprimento das obrigações trabalhistas, garantindo segurança jurídica ao contratante.
+                        </p>
+                    </div>
+
+                    <!-- 2. ESCOPO DOS SERVIÇOS -->
+                    <div class="doc-section">
+                        <h2 class="doc-section-title">2. ESCOPO DOS SERVIÇOS</h2>
+                        <div id="bind-escopo-container">
+                            <!-- Gerado via JS baseando-se nos postos marcados -->
+                        </div>
+                    </div>
+
+                    <!-- Indica quebra de página se necessário -->
+                    <div class="page-footer">Página 1 de <span class="total-pages-count">3</span></div>
+                </div>
+
+                <!-- PÁGINA 2: COMPOSIÇÃO DOS CUSTOS -->
+                <div class="page" id="doc-page-2">
+                    <div class="doc-header">
+                        <div class="doc-logo">
+                            <img src="logo.png" alt="Sólida Zeladoria Logo" class="logo-img">
+                            <div class="logo-text">
+                                <span class="logo-title">SÓLIDA</span>
+                                <span class="logo-subtitle">ZELADORIA</span>
+                            </div>
+                        </div>
+                        <div class="doc-meta-header">
+                            PROPOSTA COMERCIAL: <span class="bind-proposal-number">001/2026</span>
+                        </div>
+                    </div>
+                    <hr class="header-divider">
+
+                    <!-- 3. COMPOSIÇÃO DETALHADA DO INVESTIMENTO (POR POSTO) -->
+                    <div class="doc-section">
+                        <h2 class="doc-section-title">3. COMPOSIÇÃO DETALHADA DO INVESTIMENTO (POR POSTO)</h2>
+                        <p class="doc-paragraph">
+                            Abaixo, apresentamos a memória de cálculo que compõe o custo dos colaboradores por posto de trabalho, assegurando que todos os direitos legais estão sendo provisionados.
+                        </p>
+                        
+                        <!-- Tabelas de Detalhamento por Posto serão inseridas aqui dinamicamente -->
+                        <div id="bind-custos-postos-container">
+                            <!-- Gerado via JS para cada posto ativo -->
+                        </div>
+                    </div>
+
+                    <div class="page-footer">Página 2 de <span class="total-pages-count">3</span></div>
+                </div>
+
+                <!-- PÁGINA 3: RESUMO, ANÁLISE COMPARATIVA E CONSIDERAÇÕES -->
+                <div class="page" id="doc-page-3">
+                    <div class="doc-header">
+                        <div class="doc-logo">
+                            <img src="logo.png" alt="Sólida Zeladoria Logo" class="logo-img">
+                            <div class="logo-text">
+                                <span class="logo-title">SÓLIDA</span>
+                                <span class="logo-subtitle">ZELADORIA</span>
+                            </div>
+                        </div>
+                        <div class="doc-meta-header">
+                            PROPOSTA COMERCIAL: <span class="bind-proposal-number">001/2026</span>
+                        </div>
+                    </div>
+                    <hr class="header-divider">
+
+                    <!-- 4. RESUMO DO INVESTIMENTO OPERACIONAL CONSOLIDADO -->
+                    <div class="doc-section">
+                        <h2 class="doc-section-title">4. RESUMO DO INVESTIMENTO OPERACIONAL CONSOLIDADO</h2>
+                        <p class="doc-paragraph">
+                            Apresentamos a consolidação dos investimentos para todos os postos contratados, contemplando taxas e encargos tributários incidentes sobre a prestação de serviços.
+                        </p>
+                        <div id="bind-resumo-consolidado-container">
+                            <!-- Gerado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- 5. ANÁLISE COMPARATIVA (VALOR AGREGADO) - CONDICIONAL -->
+                    <div class="doc-section" id="doc-section-analise-comparativa">
+                        <h2 class="doc-section-title">5. ANÁLISE COMPARATIVA (VALOR AGREGADO)</h2>
+                        <p id="bind-text-analise-comparativa" class="doc-paragraph">
+                            Entendemos que a função de auxiliar de limpeza com algumas, não todas, das atividades de zeladoria onde exige polivalência. Abaixo, demonstramos a diferença entre um posto padrão e um posto com Acúmulo de Função (20%), que garante maior agilidade na resolução de problemas técnicos:
+                        </p>
+                        <div id="bind-analise-comparativa-dados">
+                            <!-- Gerado via JS de acordo com os postos ativos (normalmente Serviços Gerais) -->
+                        </div>
+                    </div>
+
+                    <!-- 6. CONSIDERAÇÕES FINAIS -->
+                    <div class="doc-section">
+                        <h2 class="doc-section-title">6. CONSIDERAÇÕES FINAIS</h2>
+                        <p id="bind-text-consideracoes-gerais" class="doc-paragraph">
+                            <!-- Texto configurável -->
+                        </p>
+                        <ul class="doc-list">
+                            <li><strong>Reajustes:</strong> O valor será reajustado anualmente conforme convenção coletiva da categoria (CCT).</li>
+                            <li><strong>Segurança:</strong> A <strong>SÓLIDA ZELADORIA</strong> assume toda a responsabilidade civil e trabalhista sobre o funcionário alocado.</li>
+                            <li><strong>Substituições:</strong> Garantimos a substituição do colaborador em caso de faltas, férias ou afastamentos (conforme contrato).</li>
+                        </ul>
+                        <p class="doc-paragraph" style="margin-top: 15px;">
+                            Para aprovação desta proposta ou ajustes no escopo, estamos à disposição.
+                        </p>
+                    </div>
+
+                    <!-- Assinatura -->
+                    <div class="doc-signature">
+                        <p>Atenciosamente,</p>
+                        <div class="signature-line"></div>
+                        <p class="sig-name" id="bind-signer-name">Jefferson dos Santos</p>
+                        <p class="sig-phone" id="bind-signer-phone">(12) 68156-5700</p>
+                        <p class="sig-email" id="bind-signer-email">comercial@solidazeladoria.com.br</p>
+                    </div>
+
+                    <div class="page-footer">Página 3 de <span class="total-pages-count">3</span></div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Script principal -->
+    <script src="app.js"></script>
+</body>
+</html>
