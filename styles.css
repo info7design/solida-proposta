@@ -673,11 +673,6 @@ body.light-theme .preview-status {
     color: #515154;
 }
 
-.preview-print-actions {
-    display: flex;
-    gap: 8px;
-}
-
 /* DOCUMENTO VIRTUAL (Estilo de folha A4) */
 .document-pages {
     padding: 40px;
@@ -833,22 +828,6 @@ body.light-theme .page {
     font-size: 9px;
 }
 
-.doc-table-summary {
-    table-layout: fixed;
-}
-
-.doc-table-summary th {
-    white-space: normal;
-    word-break: break-word;
-    vertical-align: middle;
-    line-height: 1.25;
-}
-
-.doc-table-summary th.col-desc { width: 43%; }
-.doc-table-summary th.summary-col-unit { width: 21%; text-align: right; }
-.doc-table-summary th.summary-col-qty { width: 14%; text-align: center; }
-.doc-table-summary th.summary-col-total { width: 22%; text-align: right; }
-
 /* Variação de Cabeçalho da Proposta (Amarelo Sólida) */
 .doc-table th.col-desc { width: 50%; }
 .doc-table th.col-calc { width: 25%; }
@@ -874,13 +853,6 @@ body.light-theme .page {
 /* Resumo Consolidado (Tabela Especial) */
 .consolidated-table {
     margin-top: 15px;
-}
-
-.consolidated-note {
-    margin-top: 8px;
-    font-size: 10px;
-    color: #333333;
-    font-style: italic;
 }
 
 /* Bloco de Assinatura */
@@ -1059,11 +1031,6 @@ body.light-theme .page {
    6. ESTILOS DE IMPRESSÃO (CRÍTICO)
    ========================================================================== */
 @media print {
-    @page {
-        size: A4;
-        margin: 10mm;
-    }
-
     /* Esconde elementos do editor e de controle */
     body {
         background-color: #ffffff !important;
@@ -1089,11 +1056,6 @@ body.light-theme .page {
         background-color: #ffffff !important;
         padding: 0 !important;
     }
-
-    /* Modo simplificado: oculta apenas os quadros-resumo por posto (3.5) */
-    body.print-simplified .posto-resumo-quadro {
-        display: none !important;
-    }
     
     .document-pages {
         display: block;
@@ -1102,37 +1064,27 @@ body.light-theme .page {
     }
     
     .page {
-        width: 100%;
-        min-height: 277mm;
+        width: 210mm;
+        height: 297mm;
         margin: 0 !important;
-        padding: 12mm !important;
+        padding: 20mm !important;
         box-shadow: none !important;
-        display: block;
         page-break-after: always;
-        break-after: page;
         page-break-inside: avoid;
         background-color: #ffffff !important;
         color: #000000 !important;
         border: none !important;
-        overflow: visible !important;
-    }
-
-    .page:last-child {
-        page-break-after: auto;
-        break-after: auto;
-    }
-
-    .posto-detalhamento,
-    .doc-table-wrapper {
-        break-inside: avoid;
-        page-break-inside: avoid;
     }
     
-    /* Mantém comportamento uniforme de página para todos os blocos visíveis */
-    #doc-page-1,
-    #doc-page-2,
+    /* Quebras de página específicas */
+    #doc-page-1 {
+        page-break-after: always;
+    }
+    #doc-page-2 {
+        page-break-after: always;
+    }
     #doc-page-3 {
-        break-inside: avoid;
+        page-break-after: avoid;
     }
 
     /* Impede o navegador de remover cores de fundo no print */
@@ -1149,10 +1101,6 @@ body.light-theme .page {
     .doc-client-info {
         background-color: #f9f9f9 !important;
         border-left: 3px solid #d4af37 !important;
-    }
-
-    .consolidated-note {
-        font-size: 9px;
     }
     
     .comp-card {

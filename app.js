@@ -177,9 +177,6 @@ let proposalState = {
     services: JSON.parse(JSON.stringify(DEFAULT_SERVICES))
 };
 
-const PRINT_MODE_COMPLETE = 'print-complete';
-const PRINT_MODE_SIMPLIFIED = 'print-simplified';
-
 // Aba ativa no editor de postos
 let activePostTab = 'portaria';
 
@@ -855,15 +852,15 @@ function renderDetailedCostsPreview() {
                 </div>
 
                 <!-- 3.5. QUADRO RESUMO DO POSTO -->
-                <div class="doc-table-wrapper posto-resumo-quadro" style="margin-top: 15px;">
+                <div class="doc-table-wrapper" style="margin-top: 15px;">
                     <div class="doc-table-title">3.${index*5 + 5}. QUADRO RESUMO DO POSTO - ${srv.label.toUpperCase()}</div>
-                    <table class="doc-table doc-table-summary">
+                    <table class="doc-table">
                         <thead>
                             <tr>
                                 <th class="col-desc">Descrição do Item</th>
-                                <th class="summary-col-unit">Valor Unitário (R$)</th>
-                                <th class="summary-col-qty">Quantidade</th>
-                                <th class="summary-col-total">Valor Total Mensal (R$)</th>
+                                <th style="width: 25%; text-align: right;">Valor Unitário (R$)</th>
+                                <th style="width: 15%; text-align: center;">Quantidade</th>
+                                <th style="width: 30%; text-align: right;">Valor Total Mensal (R$)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -881,7 +878,7 @@ function renderDetailedCostsPreview() {
                                 <td class="col-val">R$ ${formatNumber(Number(srv.resumo.taxaAdmin) * srv.quantidade)}</td>
                             </tr>
                             <tr>
-                                <td>Impostos / Nota Fiscal (${formatNumber(srv.resumo.impostoAliquota)}%)</td>
+                                <td>Impostos s/ Nota Fiscal (${formatNumber(srv.resumo.impostoAliquota)}%)</td>
                                 <td class="col-val">R$ ${formatNumber(srv.impostoCalculado)}</td>
                                 <td class="col-val">R$ ${formatNumber(srv.impostoCalculado * srv.quantidade)}</td>
                             </tr>
@@ -912,6 +909,7 @@ function renderConsolidatedSummaryPreview() {
     // Gerar linhas da tabela para cada serviço ativo
     let trsHtml = '';
     let totalGeralMaoDeObra = 0;
+    let totalGeralTaxaAdmin = 0;
     let totalGeralImpostos = 0;
     let totalGeralProposta = 0;
 
@@ -919,6 +917,7 @@ function renderConsolidatedSummaryPreview() {
         const srv = proposalState.services[key];
         
         totalGeralMaoDeObra += srv.custoTotalOperacional * srv.quantidade;
+        totalGeralTaxaAdmin += Number(srv.resumo.taxaAdmin) * srv.quantidade;
         totalGeralImpostos += srv.impostoCalculado * srv.quantidade;
         totalGeralProposta += srv.totalMensalidade * srv.quantidade;
 
@@ -931,6 +930,10 @@ function renderConsolidatedSummaryPreview() {
                 <td class="col-val">
                     <div>R$ ${formatNumber(srv.custoTotalOperacional)}</div>
                     <div style="font-size:8px; color:#666; font-weight:normal;">Tot: R$ ${formatNumber(srv.custoTotalOperacional * srv.quantidade)}</div>
+                </td>
+                <td class="col-val">
+                    <div>R$ ${formatNumber(srv.resumo.taxaAdmin)}</div>
+                    <div style="font-size:8px; color:#666; font-weight:normal;">Tot: R$ ${formatNumber(Number(srv.resumo.taxaAdmin) * srv.quantidade)}</div>
                 </td>
                 <td class="col-val">
                     <div>R$ ${formatNumber(srv.impostoCalculado)} <span style="color:#666; font-size:8px;">(${formatNumber(srv.resumo.impostoAliquota)}%)</span></div>
@@ -950,11 +953,12 @@ function renderConsolidatedSummaryPreview() {
         <table class="doc-table consolidated-table">
             <thead>
                 <tr>
-                    <th style="width: 29%;">Serviço / Posto</th>
-                    <th style="width: 10%; text-align: center;">Qtd</th>
-                    <th style="width: 20%; text-align: right;">Mão Obra (Unit/Tot)</th>
-                    <th style="width: 20%; text-align: right;">Impostos (Unit/Tot)</th>
-                    <th style="width: 21%; text-align: right;">Valor Final (c/ Taxa e NF)</th>
+                    <th style="width: 25%;">Serviço / Posto</th>
+                    <th style="width: 8%; text-align: center;">Qtd</th>
+                    <th style="width: 17%; text-align: right;">Mão Obra (Unit/Tot)</th>
+                    <th style="width: 16%; text-align: right;">Taxa Admin (Unit/Tot)</th>
+                    <th style="width: 17%; text-align: right;">Impostos (Unit/Tot)</th>
+                    <th style="width: 17%; text-align: right;">Valor Mensal (Unit/Tot)</th>
                 </tr>
             </thead>
             <tbody>
@@ -964,19 +968,17 @@ function renderConsolidatedSummaryPreview() {
                         <td>SUBTOTAIS ACUMULADOS</td>
                         <td style="text-align:center; font-weight:bold;">-</td>
                         <td class="col-val">R$ ${formatNumber(totalGeralMaoDeObra)}</td>
+                        <td class="col-val">R$ ${formatNumber(totalGeralTaxaAdmin)}</td>
                         <td class="col-val">R$ ${formatNumber(totalGeralImpostos)}</td>
                         <td class="col-val" style="color:var(--gold-hover);">R$ ${formatNumber(totalGeralProposta)}</td>
                     </tr>
                 ` : ''}
                 <tr class="grand-total-row" style="background-color: #e5c158; color:#000000; font-size:12px;">
-                    <td colspan="4" style="text-align: right; text-transform: uppercase; font-weight:800; font-family:var(--font-heading);">VALOR TOTAL DA MENSALIDADE DA PROPOSTA</td>
+                    <td colspan="5" style="text-align: right; text-transform: uppercase; font-weight:800; font-family:var(--font-heading);">VALOR TOTAL DA MENSALIDADE DA PROPOSTA</td>
                     <td class="col-val" style="font-weight:800; font-size:13px; border:2px solid #000;">R$ ${formatNumber(totalGeralProposta)}</td>
                 </tr>
             </tbody>
         </table>
-        <p class="consolidated-note">
-            Observação: os valores apresentados já incluem taxa administrativa, materiais e produtos de limpeza, além da emissão de nota fiscal.
-        </p>
     `;
     
     container.innerHTML = html;
@@ -1112,26 +1114,10 @@ function setupEventListeners() {
 
     // Ações de Botões (Salvar/Excluir/Imprimir/Tema)
     document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-    document.getElementById('print-complete-btn').addEventListener('click', () => printProposal(PRINT_MODE_COMPLETE));
-    document.getElementById('print-simplified-btn').addEventListener('click', () => printProposal(PRINT_MODE_SIMPLIFIED));
+    document.getElementById('print-proposal-btn').addEventListener('click', () => window.print());
     document.getElementById('save-proposal-btn').addEventListener('click', saveProposal);
     document.getElementById('load-proposal-btn').addEventListener('click', loadProposal);
     document.getElementById('delete-proposal-btn').addEventListener('click', deleteProposal);
-
-    window.addEventListener('afterprint', clearPrintMode);
-}
-
-function printProposal(mode) {
-    const body = document.body;
-    body.classList.remove(PRINT_MODE_COMPLETE, PRINT_MODE_SIMPLIFIED);
-    body.classList.add(mode);
-
-    // Garante que a classe foi aplicada antes de abrir a caixa de impressão.
-    requestAnimationFrame(() => window.print());
-}
-
-function clearPrintMode() {
-    document.body.classList.remove(PRINT_MODE_COMPLETE, PRINT_MODE_SIMPLIFIED);
 }
 
 // Alterna tema escuro/claro apenas no painel do editor
